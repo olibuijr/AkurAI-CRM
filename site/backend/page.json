@@ -1,7 +1,7 @@
 {
   "site": {
     "title": "AkurAI-CRM",
-    "description": "Pure Rust CRM — reverse-engineered from Twenty CRM",
+    "description": "Pure Rust CRM built on AkurAI-Framework",
     "url": "https://akurai-crm.olibuijr.com",
     "version": "v0.1.0"
   },

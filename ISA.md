@@ -1,7 +1,7 @@
 # AkurAI-CRM ISA
 
 ## Goal
-A pure-Rust, zero-external-dependency CRM built on AkurAI-Framework, reverse-engineered from Twenty CRM.
+A pure-Rust, zero-external-dependency CRM built on AkurAI-Framework.
 
 ## Principles
 1. Zero runtime dependencies (std + Framework crates only)

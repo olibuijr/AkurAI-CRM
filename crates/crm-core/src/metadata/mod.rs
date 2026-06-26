@@ -1,5 +1,5 @@
 //! Dynamic metadata system — objects and fields defined in data, not code.
-//! Mirrors Twenty CRM's ObjectMetadata / FieldMetadata pattern.
+//! Dynamic object/field metadata definitions.
 
 use akurai_json::Value;
 

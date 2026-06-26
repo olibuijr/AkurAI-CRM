@@ -3,6 +3,32 @@ use akurai_http::{Request, Response};
 use akurai_json::Value;
 use std::sync::{Arc, Mutex};
 
+fn url_decode(s: &str) -> String {
+    let mut result = String::new();
+    let mut chars = s.chars();
+    while let Some(c) = chars.next() {
+        if c == '%' {
+            let hi = chars.next().and_then(|c| c.to_digit(16)).unwrap_or(0);
+            let lo = chars.next().and_then(|c| c.to_digit(16)).unwrap_or(0);
+            result.push(char::from((hi * 16 + lo) as u8));
+        } else if c == '+' {
+            result.push(' ');
+        } else {
+            result.push(c);
+        }
+    }
+    result
+}
+
+fn json_values_contain(val: &akurai_json::Value, term: &str) -> bool {
+    match val {
+        akurai_json::Value::Str(s) => s.to_lowercase().contains(term),
+        akurai_json::Value::Object(pairs) => pairs.iter().any(|(_, v)| json_values_contain(v, term)),
+        akurai_json::Value::Array(items) => items.iter().any(|v| json_values_contain(v, term)),
+        _ => false,
+    }
+}
+
 pub fn search_route(state: Arc<Mutex<CrmState>>) -> Box<dyn Fn(&Request) -> Response + Send + Sync> {
     Box::new(move |req: &Request| {
         let query = req.query.as_deref().unwrap_or("");
@@ -10,7 +36,7 @@ pub fn search_route(state: Arc<Mutex<CrmState>>) -> Box<dyn Fn(&Request) -> Resp
             .find_map(|pair| {
                 let mut parts = pair.splitn(2, '=');
                 if parts.next()? == "q" {
-                    parts.next().map(|v| v.to_lowercase())
+                    parts.next().map(|v| url_decode(v).to_lowercase())
                 } else {
                     None
                 }
@@ -34,10 +60,8 @@ pub fn search_route(state: Arc<Mutex<CrmState>>) -> Box<dyn Fn(&Request) -> Resp
             let end = upper_bound(prefix);
             if let Ok(entries) = db.range(prefix, &end) {
                 for (_key_bytes, val_bytes) in entries {
-                    let val = String::from_utf8_lossy(&val_bytes).to_string();
                     if let Ok(json) = akurai_json::parse(std::str::from_utf8(&val_bytes).unwrap_or("")) {
-                        let val_lower = val.to_lowercase();
-                        if val_lower.contains(&search_term) {
+                        if json_values_contain(&json, &search_term) {
                             let entry = vec![
                                 ("entity".into(), Value::Str(prefix_str.trim_end_matches(':').into())),
                                 ("record".into(), json),

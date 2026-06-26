@@ -9,10 +9,27 @@ pub fn timeline_route(state: Arc<Mutex<CrmState>>) -> Box<dyn Fn(&Request) -> Re
         let mut entity_type = String::new();
         let mut entity_id: u64 = 0;
 
+        fn url_decode(s: &str) -> String {
+            let mut result = String::new();
+            let mut chars = s.chars();
+            while let Some(c) = chars.next() {
+                if c == '%' {
+                    let hi = chars.next().and_then(|c| c.to_digit(16)).unwrap_or(0);
+                    let lo = chars.next().and_then(|c| c.to_digit(16)).unwrap_or(0);
+                    result.push(char::from((hi * 16 + lo) as u8));
+                } else if c == '+' {
+                    result.push(' ');
+                } else {
+                    result.push(c);
+                }
+            }
+            result
+        }
+
         for pair in query.split('&') {
             let mut parts = pair.splitn(2, '=');
             match parts.next() {
-                Some("entityType") => entity_type = parts.next().unwrap_or("").to_string(),
+                Some("entityType") => entity_type = url_decode(parts.next().unwrap_or("")),
                 Some("entityId") => entity_id = parts.next().and_then(|s| s.parse().ok()).unwrap_or(0),
                 _ => {}
             }

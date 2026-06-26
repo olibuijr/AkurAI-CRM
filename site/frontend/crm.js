@@ -11,7 +11,7 @@ export class CRMClient {
   async request(method, path, body) {
     const opts = { method, headers: { 'Content-Type': 'application/json' } };
     if (body) opts.body = JSON.stringify(body);
-    const res = await fetch(`${this.base}${path}`);
+    const res = await fetch(`${this.base}${path}`, opts);
     if (!res.ok) {
       const err = await res.text();
       throw new Error(err || `HTTP ${res.status}`);

@@ -15,13 +15,13 @@ pub struct McpServer {
 }
 
 impl McpServer {
-    pub fn new(config: McpConfig) -> Self {
-        let btree = BTree::open(&config.db_path).expect("failed to open MCP database");
+    pub fn new(config: McpConfig) -> Result<Self, String> {
+        let btree = BTree::open(&config.db_path).map_err(|e| format!("failed to open MCP database: {e}"))?;
         let tools = ToolRegistry::new(Arc::new(Mutex::new(btree)));
-        Self {
+        Ok(Self {
             config,
             tools: Arc::new(tools),
-        }
+        })
     }
 
     /// Handle an MCP JSON-RPC request

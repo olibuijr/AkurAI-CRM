@@ -83,6 +83,17 @@ impl PipelineStage {
             Self::Lost => "Lost",
         }
     }
+    pub fn wire(&self) -> &str {
+        match self {
+            Self::New => "new",
+            Self::Screening => "screening",
+            Self::Meeting => "meeting",
+            Self::Proposal => "proposal",
+            Self::Negotiation => "negotiation",
+            Self::Won => "won",
+            Self::Lost => "lost",
+        }
+    }
 }
 
 /// Task status
@@ -104,6 +115,14 @@ impl TaskStatus {
             Self::InProgress => "In Progress",
             Self::Done => "Done",
             Self::Cancelled => "Cancelled",
+        }
+    }
+    pub fn wire(&self) -> &str {
+        match self {
+            Self::Todo => "todo",
+            Self::InProgress => "in_progress",
+            Self::Done => "done",
+            Self::Cancelled => "cancelled",
         }
     }
 }

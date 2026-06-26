@@ -44,7 +44,7 @@ fi
 DATE="$(date +%Y-%m-%d)"
 say "CHANGELOG: cutting [$NEW]"
 if [ -f CHANGELOG.md ]; then
-  awk -v unrel="## [Unreleased]" -V vh="## [$NEW] - $DATE" '
+  awk -v unrel="## [Unreleased]" -v vh="## [$NEW] - $DATE" '
     $0 == unrel { print unrel; print ""; print vh; next }
     { print }
   ' CHANGELOG.md > CHANGELOG.md.tmp && mv CHANGELOG.md.tmp CHANGELOG.md

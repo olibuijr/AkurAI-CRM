@@ -44,22 +44,22 @@ impl Note {
             match k.as_str() {
                 "title" => n.title = Some(v.as_str().unwrap_or("").to_string()),
                 "body" => n.body = v.as_str().unwrap_or("").to_string(),
-                "createdAt" => n.created_at = v.as_f64().map(|n| n as i64).unwrap_or(0),
-                "updatedAt" => n.updated_at = v.as_f64().map(|n| n as i64).unwrap_or(0),
+                "createdAt" => n.created_at = v.as_i64().unwrap_or(0),
+                "updatedAt" => n.updated_at = v.as_i64().unwrap_or(0),
                 _ => {
                     if k == "personIds" {
                         if let Value::Array(arr) = v {
-                            n.person_ids = arr.iter().filter_map(|x| x.as_f64().map(|n| n as u64)).collect();
+                            n.person_ids = arr.iter().filter_map(|x| x.as_i64().map(|n| n as u64)).collect();
                         }
                     }
                     if k == "companyIds" {
                         if let Value::Array(arr) = v {
-                            n.company_ids = arr.iter().filter_map(|x| x.as_f64().map(|n| n as u64)).collect();
+                            n.company_ids = arr.iter().filter_map(|x| x.as_i64().map(|n| n as u64)).collect();
                         }
                     }
                     if k == "opportunityIds" {
                         if let Value::Array(arr) = v {
-                            n.opportunity_ids = arr.iter().filter_map(|x| x.as_f64().map(|n| n as u64)).collect();
+                            n.opportunity_ids = arr.iter().filter_map(|x| x.as_i64().map(|n| n as u64)).collect();
                         }
                     }
                 }

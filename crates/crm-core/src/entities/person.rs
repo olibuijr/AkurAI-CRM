@@ -74,11 +74,11 @@ impl Person {
                 "email" => p.email = Some(Email { address: v.as_str().unwrap_or("").to_string(), label: "work".into() }),
                 "phone" => p.phone = Some(Phone { number: v.as_str().unwrap_or("").to_string(), label: "mobile".into() }),
                 "jobTitle" => p.job_title = Some(v.as_str().unwrap_or("").to_string()),
-                "companyId" => p.company_id = v.as_f64().map(|n| n as u64),
+                "companyId" => p.company_id = v.as_i64().map(|n| n as u64),
                 "linkedinUrl" => p.linkedin_url = Some(v.as_str().unwrap_or("").to_string()),
                 "avatarUrl" => p.avatar_url = Some(v.as_str().unwrap_or("").to_string()),
-                "createdAt" => p.created_at = v.as_f64().map(|n| n as i64).unwrap_or(0),
-                "updatedAt" => p.updated_at = v.as_f64().map(|n| n as i64).unwrap_or(0),
+                "createdAt" => p.created_at = v.as_i64().unwrap_or(0),
+                "updatedAt" => p.updated_at = v.as_i64().unwrap_or(0),
                 _ => {}
             }
         }

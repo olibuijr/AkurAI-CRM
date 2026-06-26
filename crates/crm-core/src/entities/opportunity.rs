@@ -56,7 +56,7 @@ impl Opportunity {
         for (k, v) in pairs {
             match k.as_str() {
                 "name" => o.name = v.as_str().unwrap_or("").to_string(),
-                "amount" => o.amount = v.as_f64().map(|n| n as i64),
+                "amount" => o.amount = v.as_i64(),
                 "stage" => {
                     let s = v.as_str().unwrap_or("new");
                     o.stage = match s.to_lowercase().as_str() {
@@ -69,12 +69,12 @@ impl Opportunity {
                         _ => PipelineStage::New,
                     };
                 }
-                "closeDate" => o.close_date = v.as_f64().map(|n| n as i64),
-                "probability" => o.probability = v.as_f64().map(|n| n as u8),
-                "personId" => o.person_id = v.as_f64().map(|n| n as u64),
-                "companyId" => o.company_id = v.as_f64().map(|n| n as u64),
-                "createdAt" => o.created_at = v.as_f64().map(|n| n as i64).unwrap_or(0),
-                "updatedAt" => o.updated_at = v.as_f64().map(|n| n as i64).unwrap_or(0),
+                "closeDate" => o.close_date = v.as_i64(),
+                "probability" => o.probability = v.as_i64().map(|n| n as u8),
+                "personId" => o.person_id = v.as_i64().map(|n| n as u64),
+                "companyId" => o.company_id = v.as_i64().map(|n| n as u64),
+                "createdAt" => o.created_at = v.as_i64().unwrap_or(0),
+                "updatedAt" => o.updated_at = v.as_i64().unwrap_or(0),
                 _ => {}
             }
         }

@@ -39,34 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-export async function loadDashboardStats() {
-  try {
-    const [people, companies, opportunities, tasks] = await Promise.all([
-      client.list('people').catch(() => []),
-      client.list('companies').catch(() => []),
-      client.list('opportunities').catch(() => []),
-      client.list('tasks').catch(() => []),
-    ]);
-    const totalContacts = (people.length || 0) + (companies.length || 0);
-    const activeDeals = (opportunities || []).filter(o => o.stage !== 'won' && o.stage !== 'lost').length;
-    const pipelineRevenue = (opportunities || [])
-      .filter(o => o.stage !== 'lost')
-      .reduce((sum, o) => sum + (o.amount || 0), 0);
-    const dueToday = (tasks || []).filter(t => t.status !== 'done').length;
-
-    const statContacts = document.getElementById('stat-contacts');
-    const statDeals = document.getElementById('stat-deals');
-    const statRevenue = document.getElementById('stat-revenue');
-    const statTasks = document.getElementById('stat-tasks');
-
-    if (statContacts) statContacts.textContent = totalContacts;
-    if (statDeals) statDeals.textContent = activeDeals;
-    if (statRevenue) statRevenue.textContent = `$${(pipelineRevenue / 100).toLocaleString()}`;
-    if (statTasks) statTasks.textContent = dueToday;
-  } catch (e) {
-    showToast('Could not load dashboard stats', 'error');
-  }
-}
 
 export function showToast(message, type = 'info') {
   const container = document.getElementById('toast-container');

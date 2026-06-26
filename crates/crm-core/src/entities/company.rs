@@ -59,12 +59,12 @@ impl Company {
             match k.as_str() {
                 "name" => c.name = v.as_str().unwrap_or("").to_string(),
                 "domainName" => c.domain_name = Some(v.as_str().unwrap_or("").to_string()),
-                "annualRevenue" => c.annual_revenue = v.as_f64().map(|n| n as i64),
-                "employeeCount" => c.employee_count = v.as_f64().map(|n| n as u32),
+                "annualRevenue" => c.annual_revenue = v.as_i64(),
+                "employeeCount" => c.employee_count = v.as_i64().map(|n| n as u32),
                 "linkedinUrl" => c.linkedin_url = Some(v.as_str().unwrap_or("").to_string()),
                 "websiteUrl" => c.website_url = Some(v.as_str().unwrap_or("").to_string()),
-                "createdAt" => c.created_at = v.as_f64().map(|n| n as i64).unwrap_or(0),
-                "updatedAt" => c.updated_at = v.as_f64().map(|n| n as i64).unwrap_or(0),
+                "createdAt" => c.created_at = v.as_i64().unwrap_or(0),
+                "updatedAt" => c.updated_at = v.as_i64().unwrap_or(0),
                 _ => {}
             }
         }

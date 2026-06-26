@@ -85,7 +85,7 @@
                 <div style="display:flex;align-items:center;gap:var(--space-6);margin-bottom:var(--space-8);">
                   <div class="avatar avatar-lg" style="width:64px;height:64px;font-size:var(--text-xl);">OU</div>
                   <div>
-                    <button class="btn btn-secondary btn-sm" onclick="alert('Upload photo')">Change Photo</button>
+                    <button class="btn btn-secondary btn-sm" onclick="console.warn('Upload photo')">Change Photo</button>
                     <p style="font-size:var(--text-xs);color:var(--color-text-tertiary);margin-top:var(--space-1);">JPG, PNG, or GIF. 1MB max.</p>
                   </div>
                 </div>
@@ -117,7 +117,7 @@
                 </div>
 
                 <div class="form-actions">
-                  <button class="btn btn-secondary" onclick="alert('Discard changes')">Cancel</button>
+                  <button class="btn btn-secondary" onclick="console.warn('Discard changes')">Cancel</button>
                   <button class="btn btn-primary" onclick="showToast('Profile updated', 'success')">Save Changes</button>
                 </div>
               </div>
@@ -146,7 +146,7 @@
                 </div>
 
                 <div class="form-actions">
-                  <button class="btn btn-secondary" onclick="alert('Discard changes')">Cancel</button>
+                  <button class="btn btn-secondary" onclick="console.warn('Discard changes')">Cancel</button>
                   <button class="btn btn-primary" onclick="showToast('Workspace updated', 'success')">Save Changes</button>
                 </div>
               </div>
@@ -218,7 +218,7 @@
               <div class="settings-card">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-4);">
                   <h3 style="font-size:var(--text-base);">Your API Keys</h3>
-                  <button class="btn btn-primary btn-sm" onclick="alert('Generate new key')">
+                  <button class="btn btn-primary btn-sm" onclick="console.warn('Generate new key')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     Generate Key
                   </button>
@@ -259,7 +259,7 @@
               <div class="settings-card">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-4);">
                   <h3 style="font-size:var(--text-base);">Team Members</h3>
-                  <button class="btn btn-primary btn-sm" onclick="alert('Invite member modal')">
+                  <button class="btn btn-primary btn-sm" onclick="console.warn('Invite member modal')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                     Invite Member
                   </button>

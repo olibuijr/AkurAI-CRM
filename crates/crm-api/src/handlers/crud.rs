@@ -93,7 +93,9 @@ pub fn create_route(state: Arc<Mutex<CrmState>>, entity: &'static str) -> Box<dy
             }
             _ => 1,
         };
-        let _ = db.insert(&counter_key, next_id.to_string().as_bytes());
+        if db.insert(&counter_key, next_id.to_string().as_bytes()).is_err() {
+            return internal_error("failed to update counter");
+        }
 
         let mut obj = match body {
             Value::Object(fields) => fields,

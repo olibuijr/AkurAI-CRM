@@ -4,13 +4,20 @@
 import { client } from './crm.js';
 
 export async function loadTable(entity, tableBodyId) {
-  const data = await client.list(entity);
-  const tbody = document.getElementById(tableBodyId);
-  if (!tbody || !data || !data.length) {
-    if (tbody) tbody.innerHTML = '<tr><td colspan="10" class="empty-state">No records found</td></tr>';
-    return data || [];
+  try {
+    const data = await client.list(entity);
+    const tbody = document.getElementById(tableBodyId);
+    if (!tbody || !data || !data.length) {
+      if (tbody) tbody.innerHTML = '<tr><td colspan="10" class="empty-state">No records found</td></tr>';
+      return data || [];
+    }
+    return data;
+  } catch (e) {
+    console.warn(`Failed to load ${entity}:`, e);
+    const tbody = document.getElementById(tableBodyId);
+    if (tbody) tbody.innerHTML = `<tr><td colspan="10" class="empty-state">Error loading ${entity}</td></tr>`;
+    return [];
   }
-  return data;
 }
 
 export async function loadStats() {
@@ -22,7 +29,7 @@ export async function loadStats() {
   ]);
   setText('stat-contacts', (people.length + companies.length).toString());
   setText('stat-deals', opportunities.filter(o => o.stage !== 'won' && o.stage !== 'lost').length.toString());
-  setText('stat-revenue', '$' + opportunities.filter(o => o.stage !== 'lost').reduce((s, o) => s + (o.amount || 0), 0).toLocaleString());
+  setText('stat-revenue', '$' + opportunities.filter(o => o.stage !== 'lost').reduce((s, o) => s + ((o.amount || 0) / 100), 0).toLocaleString());
   setText('stat-tasks', tasks.filter(t => t.status !== 'done').length.toString());
 }
 
@@ -112,6 +119,7 @@ export async function loadPersonDetail(personId) {
   try {
     const p = await client.get('people', personId);
     setText('detail-name', `${p.firstName || ''} ${p.lastName || ''}`);
+    document.title = `${p.firstName || ''} ${p.lastName || ''} — AkurAI-CRM`;
     setText('detail-jobtitle', p.jobTitle || '—');
     setText('detail-email', p.email || '—');
     setText('detail-phone', p.phone || '—');
@@ -134,7 +142,11 @@ export async function loadCompanyDetail(companyId) {
     setText('detail-domain', c.domainName || '—');
     setText('detail-revenue', c.annualRevenue ? '$' + (c.annualRevenue / 100).toLocaleString() : '—');
     setText('detail-employees', c.employeeCount?.toString() || '—');
-    setText('detail-website', c.websiteUrl || '—');
+    const wsEl = document.getElementById('detail-website');
+    if (wsEl) {
+      wsEl.textContent = c.websiteUrl || '—';
+      wsEl.href = c.websiteUrl || '#';
+    }
 
     // Load people at this company
     const people = await client.list('people');

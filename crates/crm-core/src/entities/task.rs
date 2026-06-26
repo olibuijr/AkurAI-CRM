@@ -64,24 +64,24 @@ impl Task {
                         _ => TaskStatus::Todo,
                     };
                 }
-                "dueAt" => t.due_at = v.as_f64().map(|n| n as i64),
-                "assigneeId" => t.assignee_id = v.as_f64().map(|n| n as u64),
-                "createdAt" => t.created_at = v.as_f64().map(|n| n as i64).unwrap_or(0),
-                "updatedAt" => t.updated_at = v.as_f64().map(|n| n as i64).unwrap_or(0),
+                "dueAt" => t.due_at = v.as_i64(),
+                "assigneeId" => t.assignee_id = v.as_i64().map(|n| n as u64),
+                "createdAt" => t.created_at = v.as_i64().unwrap_or(0),
+                "updatedAt" => t.updated_at = v.as_i64().unwrap_or(0),
                 _ => {
                     if k == "personIds" {
                         if let Value::Array(arr) = v {
-                            t.person_ids = arr.iter().filter_map(|x| x.as_f64().map(|n| n as u64)).collect();
+                            t.person_ids = arr.iter().filter_map(|x| x.as_i64().map(|n| n as u64)).collect();
                         }
                     }
                     if k == "companyIds" {
                         if let Value::Array(arr) = v {
-                            t.company_ids = arr.iter().filter_map(|x| x.as_f64().map(|n| n as u64)).collect();
+                            t.company_ids = arr.iter().filter_map(|x| x.as_i64().map(|n| n as u64)).collect();
                         }
                     }
                     if k == "opportunityIds" {
                         if let Value::Array(arr) = v {
-                            t.opportunity_ids = arr.iter().filter_map(|x| x.as_f64().map(|n| n as u64)).collect();
+                            t.opportunity_ids = arr.iter().filter_map(|x| x.as_i64().map(|n| n as u64)).collect();
                         }
                     }
                 }

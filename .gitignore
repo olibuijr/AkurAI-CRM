@@ -1,0 +1,10 @@
+/target
+/data/
+*.db
+*.db-journal
+.env
+.env.*
+.DS_Store
+*.swp
+.claude/
+node_modules/

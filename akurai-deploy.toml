@@ -1,0 +1,11 @@
+name = "akurai-crm"
+domain = "akurai-crm.olibuijr.com"
+port = 8103
+repo = "olibuijr/AkurAI-CRM"
+build = "cargo build --release --target x86_64-unknown-linux-musl"
+artifact = "target/x86_64-unknown-linux-musl/release/akurai-crm"
+version_file = "VERSION"
+cargo_version = "workspace"
+gate_fmt = true
+gate_clippy = true
+gate_test = true

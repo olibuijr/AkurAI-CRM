@@ -58,11 +58,7 @@ pub fn build_router(state: Arc<Mutex<CrmState>>) -> Vec<Route> {
         r("OPTIONS", "/*", options_handler()),
         r("GET", "/", handlers::static_file_route(Arc::clone(&state))),
         // Auth routes (before catch-all /*)
-        r(
-            "GET",
-            "/auth/login",
-            auth::login_route(Arc::clone(&state)),
-        ),
+        r("GET", "/auth/login", auth::login_route(Arc::clone(&state))),
         r(
             "GET",
             "/auth/callback",
@@ -73,11 +69,7 @@ pub fn build_router(state: Arc<Mutex<CrmState>>) -> Vec<Route> {
             "/auth/logout",
             auth::logout_route(Arc::clone(&state)),
         ),
-        r(
-            "GET",
-            "/api/me",
-            auth::me_route(Arc::clone(&state)),
-        ),
+        r("GET", "/api/me", auth::me_route(Arc::clone(&state))),
         r("GET", "/*", handlers::static_file_route(Arc::clone(&state))),
         r(
             "GET",

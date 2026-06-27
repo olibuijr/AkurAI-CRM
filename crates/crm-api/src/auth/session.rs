@@ -61,8 +61,16 @@ pub fn get_user(db: &mut BTree, session_id: &str) -> Option<User> {
         Ok(Some(bytes)) => {
             let s = String::from_utf8_lossy(&bytes);
             if let Ok(val) = akurai_json::parse(&s) {
-                let sub = val.get("sub").and_then(|v| v.as_str()).unwrap_or("").to_string();
-                let email = val.get("email").and_then(|v| v.as_str()).unwrap_or("").to_string();
+                let sub = val
+                    .get("sub")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("")
+                    .to_string();
+                let email = val
+                    .get("email")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("")
+                    .to_string();
                 Some(User { sub, email })
             } else {
                 None

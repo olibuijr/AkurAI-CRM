@@ -7,9 +7,7 @@ use akurai_json::Value;
 use std::sync::{Arc, Mutex};
 
 /// GET /auth/login — redirect to IDP /authorize
-pub fn login_route(
-    state: Arc<Mutex<CrmState>>,
-) -> Box<dyn Fn(&Request) -> Response + Send + Sync> {
+pub fn login_route(state: Arc<Mutex<CrmState>>) -> Box<dyn Fn(&Request) -> Response + Send + Sync> {
     let _ = state; // unused, kept for signature consistency
     Box::new(move |_req: &Request| {
         let client_id = "d5c002f01d1dff402d01439fe3b37918";
@@ -80,8 +78,9 @@ pub fn callback_route(
                     session::create(&mut db, &userinfo.sub, &userinfo.email)
                 };
 
-                let cookie =
-                    format!("crm_session={session_id}; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400");
+                let cookie = format!(
+                    "crm_session={session_id}; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400"
+                );
 
                 let mut resp = Response::ok();
                 resp.status = 302;
@@ -96,9 +95,7 @@ pub fn callback_route(
 }
 
 /// GET /api/me — return current user info from session
-pub fn me_route(
-    state: Arc<Mutex<CrmState>>,
-) -> Box<dyn Fn(&Request) -> Response + Send + Sync> {
+pub fn me_route(state: Arc<Mutex<CrmState>>) -> Box<dyn Fn(&Request) -> Response + Send + Sync> {
     Box::new(move |req: &Request| {
         let session_id = session::extract_session_id(req);
         let user = match session_id {
@@ -122,9 +119,10 @@ pub fn me_route(
                 ("sub".into(), Value::Str(u.sub)),
                 ("email".into(), Value::Str(u.email)),
             ])),
-            None => json_response(Value::Object(vec![
-                ("authenticated".into(), Value::Bool(false)),
-            ])),
+            None => json_response(Value::Object(vec![(
+                "authenticated".into(),
+                Value::Bool(false),
+            )])),
         }
     })
 }

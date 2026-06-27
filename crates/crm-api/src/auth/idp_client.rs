@@ -5,7 +5,8 @@ pub struct UserInfo {
 
 pub fn exchange_code(code: &str, _state: &str) -> Result<UserInfo, String> {
     let client_id = "d5c002f01d1dff402d01439fe3b37918";
-    let client_secret = "e3b9943ad933d477f7517e81e725a08ed4be88881803b482cd8c01666e22608d01b0b9dc489a3825";
+    let client_secret =
+        "e3b9943ad933d477f7517e81e725a08ed4be88881803b482cd8c01666e22608d01b0b9dc489a3825";
     let redirect_uri = "https://akurai-crm.olibuijr.com/auth/callback";
 
     let basic = base64_encode(&format!("{}:{}", client_id, client_secret));
@@ -16,14 +17,17 @@ pub fn exchange_code(code: &str, _state: &str) -> Result<UserInfo, String> {
     );
 
     let response = http_post(
-        "127.0.0.1", 3500, "/token",
-        &[("Authorization", &format!("Basic {}", basic)),
-          ("Content-Type", "application/x-www-form-urlencoded")],
+        "127.0.0.1",
+        3500,
+        "/token",
+        &[
+            ("Authorization", &format!("Basic {}", basic)),
+            ("Content-Type", "application/x-www-form-urlencoded"),
+        ],
         &token_body,
     )?;
 
-    let token_json = akurai_json::parse(&response.body)
-        .map_err(|e| format!("token parse: {e}"))?;
+    let token_json = akurai_json::parse(&response.body).map_err(|e| format!("token parse: {e}"))?;
 
     let access_token = token_json
         .get("access_token")
@@ -32,12 +36,14 @@ pub fn exchange_code(code: &str, _state: &str) -> Result<UserInfo, String> {
         .to_string();
 
     let userinfo_response = http_get(
-        "127.0.0.1", 3500, "/userinfo",
+        "127.0.0.1",
+        3500,
+        "/userinfo",
         &[("Authorization", &format!("Bearer {}", access_token))],
     )?;
 
-    let info = akurai_json::parse(&userinfo_response.body)
-        .map_err(|e| format!("userinfo parse: {e}"))?;
+    let info =
+        akurai_json::parse(&userinfo_response.body).map_err(|e| format!("userinfo parse: {e}"))?;
 
     let sub = info
         .get("sub")
@@ -60,7 +66,12 @@ struct HttpResponse {
     body: String,
 }
 
-fn http_get(host: &str, port: u16, path: &str, headers: &[(&str, &str)]) -> Result<HttpResponse, String> {
+fn http_get(
+    host: &str,
+    port: u16,
+    path: &str,
+    headers: &[(&str, &str)],
+) -> Result<HttpResponse, String> {
     let mut req = format!("GET {} HTTP/1.1\r\nHost: {}:{}\r\n", path, host, port);
     for (k, v) in headers {
         req.push_str(&format!("{}: {}\r\n", k, v));
@@ -69,10 +80,19 @@ fn http_get(host: &str, port: u16, path: &str, headers: &[(&str, &str)]) -> Resu
     send_http(host, port, &req)
 }
 
-fn http_post(host: &str, port: u16, path: &str, headers: &[(&str, &str)], body: &str) -> Result<HttpResponse, String> {
+fn http_post(
+    host: &str,
+    port: u16,
+    path: &str,
+    headers: &[(&str, &str)],
+    body: &str,
+) -> Result<HttpResponse, String> {
     let mut req = format!(
         "POST {} HTTP/1.1\r\nHost: {}:{}\r\nContent-Length: {}\r\n",
-        path, host, port, body.len()
+        path,
+        host,
+        port,
+        body.len()
     );
     for (k, v) in headers {
         req.push_str(&format!("{}: {}\r\n", k, v));
@@ -104,8 +124,7 @@ fn send_http(host: &str, port: u16, request: &str) -> Result<HttpResponse, Strin
 
     let mut buf = Vec::new();
     let mut rd = &stream;
-    rd.read_to_end(&mut buf)
-        .map_err(|e| format!("read: {e}"))?;
+    rd.read_to_end(&mut buf).map_err(|e| format!("read: {e}"))?;
 
     let response = String::from_utf8_lossy(&buf).to_string();
 
@@ -123,7 +142,11 @@ fn send_http(host: &str, port: u16, request: &str) -> Result<HttpResponse, Strin
     };
 
     if !(200..300).contains(&status) {
-        return Err(format!("HTTP {}: {}", status, body.chars().take(200).collect::<String>()));
+        return Err(format!(
+            "HTTP {}: {}",
+            status,
+            body.chars().take(200).collect::<String>()
+        ));
     }
 
     Ok(HttpResponse { status, body })
